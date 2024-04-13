@@ -6,6 +6,15 @@ const item = document.querySelectorAll(".products .item");
 const listCart = document.querySelector(".listCart-items");
 let arrayDeObjetos = [];
 
+class newProduct {
+  constructor(id, imagem, itemName, itemValue) {
+    this.id = id;
+    this.imagem = imagem;
+    this.itemName = itemName;
+    this.itemValue = itemValue;
+  }
+}
+
 cartIcon.addEventListener("click", () => {
   body.classList.toggle("showCart");
 });
@@ -24,8 +33,28 @@ addBtn.forEach((btn, index) => {
       .querySelector(".item-value")
       .innerHTML.slice(2);
 
-    let novoObjeto = new newProduct(index, img, itemName, itemValue);
-    arrayDeObjetos.push(novoObjeto);
+    if (listCart.children.length == 0) {
+      let novoObjeto = new newProduct(index, img, itemName, itemValue);
+      arrayDeObjetos.push(novoObjeto);
+      addProduct(id, img, itemName, itemValue);
+    } else {
+      let existeProduct = arrayDeObjetos.some(
+        (productId) => productId.id === index
+      );
+      if (existeProduct) {
+        console.log("Existe");
+        arrayDeObjetos.forEach(function (objeto, arrayId, array) {
+          if (objeto.id === index) {
+            array[arrayId].itemValue = 500;
+          }
+        });
+      } else {
+        console.log("não existe");
+        let novoObjeto = new newProduct(index, img, itemName, itemValue);
+        arrayDeObjetos.push(novoObjeto);
+        addProduct(id, img, itemName, itemValue);
+      }
+    }
 
     console.log(arrayDeObjetos);
 
@@ -53,11 +82,4 @@ function addProduct(id, imagem, itemName, itemValue) {
 </div>`;
 
   listCart.appendChild(product);
-}
-
-function newProduct(id, imagem, itemName, itemValue) {
-  this.id = id;
-  this.imagem = imagem;
-  this.itemName = itemName;
-  this.itemValue = itemValue;
 }
